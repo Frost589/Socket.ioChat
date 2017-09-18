@@ -44,6 +44,7 @@ io.sockets.on('connection', function(socket){
 	});
 
 	function updateUsernames(){
+		console.log(users);
 		io.sockets.emit('get users', users);
 	}
 

@@ -21,14 +21,14 @@
 	<div class="container">
 		<div id="userFormArea" class="row">
 			<div class="col-md-12">
-				<form is ="usersForm">
-						<div class="from-group">
-							<label>Enter Username</label>
-							<input class="form-control" id="username" />
-							<br />
-							<input type="submit" class="btn btn-primary" value="Login" />
-						</div>
-					</form>
+				<form id="userForm">
+					<div class="from-group">
+						<label>Enter Username</label>
+						<input class="form-control" id="username" />
+						<br />
+						<input type="submit" class="btn btn-primary" value="Login" />
+					</div>
+				</form>
 			</div>
 		</div>
 		<div id="messageArea" class="row">
@@ -41,7 +41,7 @@
 		
 			<div class="col-md-8">
 				<div class="chat" id="chat"></div>
-					<form is ="messageForm">
+					<form id="messageForm">
 						<div class="from-group">
 							<label>Enter Message</label>
 							<textarea class="form-control" id="message"></textarea>
@@ -66,20 +66,23 @@
  			var $username = $('#username');
 
  			$messageForm.submit(function(e){
+ 				console.log('message form submit');
  				e.preventDefault();
  				socket.emit('send message', $message.val());
  				$message.val('');
  			});
 
  			socket.on('new message', function(data){
- 			$chat.append('<div class="well">'+data.msg+'</div>');
+ 				console.log('socket received new message: ' + data);
+ 				$chat.append('<div class="well">'+data.msg+'</div>');
 
  			});
 
  			$userForm.submit(function(e){
+ 				console.log('user form submit');
  				e.preventDefault();
- 				socket.emit('new user', $message.val(), function(data){
- 					i(data) 
+ 				socket.emit('new user', $username.val(), function(data){
+ 					if(data) 
  						$userFormArea.hide();
  						$messageArea.show();
  					
@@ -88,6 +91,7 @@
  			});
 
  			socket.on('get users', function(data){
+ 				console.log('socket received get users: ' + data )
  				var html = '';
  				for(i = 0;i < data.length;i++){
  					html+= '<li class="list-group-item">'+data[i]+'</li>';
